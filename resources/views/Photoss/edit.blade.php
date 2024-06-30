@@ -1,14 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="{{ asset('bootstrap-5/css/bootstrap.min.css') }}" rel="stylesheet">
-    <script src="{{ asset('bootstrap-5/js/bootstrap.bundle.min.js') }}"></script>
-    <title>Edit</title>
-</head>
-<body>
+@extends('layout.app')
+@section('title', 'ubah postingan')
+
+@section('content')
+    
+
     <div class="container">
         <h1 class="mt-5">Edit Postingan</h1>
         <form method="POST" action="{{ url("posts/$photo->id") }}" class="mt-3">
@@ -34,5 +29,4 @@
          <button type="submit" class="btn btn-danger">Hapus</button>
     </form>
 
-</body>
-</html>
+    @endsection

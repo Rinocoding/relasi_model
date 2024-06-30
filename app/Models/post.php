@@ -8,14 +8,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
 {
-    use HasFactory;
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     public function comments(){
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class, 'post_id');
+        // return $this->hasMany(Comment::class);//dari codepolitan
     }
 
-    public function scopeActive($query) {
+    public function total_comments() {
+        return $this->comments()->count();
+    }
+
+
+    public function scopeActive($query){
         return $query->where('active', true);
     }
 }

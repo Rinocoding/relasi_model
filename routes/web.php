@@ -1,9 +1,11 @@
 <?php
-
-use App\Http\Controllers\HelloController;
-use App\Http\Controllers\PhotoController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Contoh;
+
+// use App\Http\Controllers\HelloController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PhotoController;
+// use App\Http\Controllers\Contoh;
+// use App\Models\Post;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,8 +23,8 @@ Route::get('/', function () {
     // echo "welcome";
 });
 
-Route::get('app.models.post', function() {
-    return view('app.models.post');
+Route::get('/tambah', function() {
+   return $user =  \App\Models\Post::find(1);
 });
 
 // Route::get('/hello/rino', function() {
@@ -36,6 +38,16 @@ Route::get('app.models.post', function() {
 // Route::get('world', [Hellocontroller::class, 'world_message']);
 // Route::get('akses', [Contoh::class, 'yes']);
  
+
+
+
+
+Route::get('login', [AuthController::class, 'login']);
+Route::post('login', [AuthController::class, 'authenticate']);
+Route::get('logout', [AuthController::class, 'logout' ]);
+Route::get('register', [AuthController::class, 'register_form']);
+Route::post('register', [AuthController::class, 'register']);
+
 Route::post('posts', [PhotoController::class, 'store']);
 Route::get('posts', [PhotoController::class, 'index']);
 Route::get('posts/create', [PhotoController::class, 'create']);

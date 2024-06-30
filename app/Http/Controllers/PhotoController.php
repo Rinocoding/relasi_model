@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 
+use App\Mail\BlogPosted;
+
+
 use App\Models\Post; 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -25,6 +30,10 @@ class PhotoController extends Controller
 
     public function index()
     {
+        if(!Auth::check()){
+            return Redirect('login');
+        }
+
         $photos = Post::active()->get();
         // ->withTrashed()  befungsi untuk mengembalikan data yang terhapus
         $view_data = [
@@ -32,13 +41,17 @@ class PhotoController extends Controller
         ];
 
         return view('photoss.index', $view_data);
+      
     }
-
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
+        if(!Auth::check()){
+            return Redirect('login');
+        }
+
         return view('photoss.create');
     }
 
@@ -48,16 +61,21 @@ class PhotoController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Auth::check()){
+            return Redirect('login');
+        }
+
         $title = $request->input('title');
         $content = $request->input('content');
 
         // $photos = Storage::get('photos.txt');
-         Post::insert([
-            'title' => $title,
-            'content' => $content,
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
+         Post::Create([
+            'title' => $request->input('title'),
+            'content' => $request->input('content')
+           
         ]);
+
+        \Mail::to('admin"codepolitan.com')->send(new BlogPosted());
 
    
         return redirect('posts');
@@ -69,11 +87,19 @@ class PhotoController extends Controller
 
     public function show(string $id)
     {
-        $photo = Post::where('id', '=', $id)
+        if(!Auth::check()){
+            return Redirect('login');
+        }
+        
+        $photo = Post::where('id', $id)->limit(5)
             ->first();
+        $comments = $photo->comments()->limit(5)->get();
+        $total_comments = $photo->total_comments();
 
         $view_data = [
-            'photo' => $photo
+            'photo'          => $photo,
+            'comments'       => $comments,
+            'total_comments' => $total_comments,
         ];
 
         return view('photoss.show', $view_data);
@@ -85,6 +111,10 @@ class PhotoController extends Controller
      */
     public function edit(string $id)
     {
+        if(!Auth::check()){
+            return Redirect('login');
+        }
+
         $photo = Post::where('id', '=', $id)
                ->first();
         $view_data = [
@@ -99,6 +129,10 @@ class PhotoController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if(!Auth::check()){
+            return Redirect('login');
+        }
+
         $title = $request->input('title');
         $content = $request->input('content');
 
@@ -117,6 +151,10 @@ class PhotoController extends Controller
      */
     public function destroy(string $id)
     {
+        if(!Auth::check()){
+            return Redirect('login');
+        }
+        
         Post::where('id', $id)
             ->delete();
 
